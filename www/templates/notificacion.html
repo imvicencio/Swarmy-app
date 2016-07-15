@@ -1,0 +1,24 @@
+<ion-view view-title="notificacion">
+  <ion-content>
+    <div class="list card">
+      <a class="item item-icon-left ">
+        <i class="icon ion-ios-people"></i>
+        Notificaciones
+      </a>
+
+      <button class="button" ng-click="doSomething()">
+      Nueva notificacion ++
+      </button>
+    </div>
+
+    <div class="list card">
+      <ion-item ng-repeat="noti in notificacionData">
+        {{noti.titulo}}
+        {{noti.contenido}}
+      </ion-item>
+    </div>
+
+
+
+  </ion-content>
+</ion-view>
