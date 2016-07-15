@@ -89,7 +89,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
     google.maps.event.addListenerOnce($scope.map, 'idle', function(){
       var marker = new google.maps.Marker({
           map: $scope.map,
-          animation: google.maps.Animation.DROP,
+          animation: google.maps.Animation.BOUNCE,
           position: latLng
       });
       var infoWindow = new google.maps.InfoWindow({
@@ -103,7 +103,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
     var marca1 = new google.maps.Marker({
         map: $scope.map,
         animation: google.maps.Animation.DROP,
-        position:pos1,       
+        position:pos1,
     });
     var infoWindow1 = new google.maps.InfoWindow({
           content: '<h2>Estadio Usach</h2><img src="img/Estadio.png" /> <br><a href="#/app/estadio"> Mas info</a>'
@@ -117,7 +117,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
     var marca2 = new google.maps.Marker({
         map: $scope.map,
         animation: google.maps.Animation.DROP,
-        position:pos2      
+        position:pos2
     });
     var infoWindow2 = new google.maps.InfoWindow({
           content: "Kioscos de Informática"
@@ -125,12 +125,12 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
       google.maps.event.addListener(marca2, 'click', function () {
           infoWindow2.open($scope.map, marca2);
       });
-      
+
     var pos3 =  new google.maps.LatLng(-33.4500630, -70.6862283);
     var marca3 = new google.maps.Marker({
         map: $scope.map,
         animation: google.maps.Animation.DROP,
-        position:pos3       
+        position:pos3
     });
     var infoWindow3 = new google.maps.InfoWindow({
           content: "Casino Central"
@@ -143,14 +143,14 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
     var marca4 = new google.maps.Marker({
         map: $scope.map,
         animation: google.maps.Animation.DROP,
-        position:pos4       
+        position:pos4
     });
     var infoWindow4 = new google.maps.InfoWindow({
           content: "Centro Médico"
       });
       google.maps.event.addListener(marca4, 'click', function () {
           infoWindow4.open($scope.map, marca4);
-      }); 
+      });
 
     var pos5 =  new google.maps.LatLng(-33.4510477, -70.6832778);
     var marca5 = new google.maps.Marker({
@@ -163,9 +163,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
       });
       google.maps.event.addListener(marca5, 'click', function () {
           infoWindow5.open($scope.map, marca5);
-      }); 
+      });
 
-                 
+
     })
   }, function(error){
     console.log("Could not get location");
