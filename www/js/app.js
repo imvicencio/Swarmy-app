@@ -25,18 +25,25 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-
     .state('app', {
     url: '/app',
     abstract: true,
     templateUrl: 'templates/menu.html',
-    controller: 'AppCtrl'
+    controller: 'ViewCtrl'
   })
+
+
 
   .state('splash', {
     url: '/splash',
     templateUrl: 'templates/splash.html'//,
     //controller: 'AppCtrl'
+  })
+
+  .state('registro', {
+      url: '/registro',
+      templateUrl: 'templates/registro.html',
+      controller:'RegistroCtrl'
   })
 
   .state('app.comunidades', {
@@ -53,12 +60,23 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/estadio',
     views: {
       'menuContent': {
-        templateUrl: 'templates/estadio.html'
+        templateUrl: 'templates/estadio.html',
+        controller: 'RankingCtrl'
       }
     }
   })
 
-  .state('app.servicios', {
+.state('app.pizzasxl', {
+    url: '/pizzasxl',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/pizzasxl.html',
+        controller: 'RankingCtrl'
+      }
+    }
+  })
+
+.state('app.servicios', {
       url: '/servicios',
       views: {
         'menuContent': {
@@ -80,8 +98,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       url: '/inicio',
       views: {
         'menuContent': {
-          templateUrl: 'templates/inicio.html'//,
-          //controller: 'PlaylistsCtrl'
+          templateUrl: 'templates/inicio.html',
+          controller: 'ViewCtrl'
         }
       }
     })
