@@ -1,0 +1,33 @@
+<ion-view view-title="Comunidad" class="titulo-vistas">
+  <ion-content>
+
+	<div class="list card" align="center">
+
+	<h2> Crear Comunidad</h2>
+	</div>
+
+	<div class="list card">
+		<div class="list list-inset">
+  			<label class="item item-input">
+    			<i class="icon ion-ios-people placeholder-icon"></i>
+    			<input type="text" placeholder="Ingrese su nombre de la comunidad" ng-model='input.nombreComunidad' required>  
+  			</label>
+		</div>
+	</div>
+	<div class="list card">
+		<div class="list list-inset">
+  			<label class="item item-input">
+    			<i class="icon ion-ios-people placeholder-icon"></i>
+    			<input type="text" placeholder="Descripcion de la comunidad" ng-model='input.descripcionComunidad' 	>    
+  			</label>
+		</div>
+	</div>
+	<div class="list card">
+       	<div class="button-bar">
+		<a class="button button-l button-positive" href="#/app/comunidads" ng-click='sendData()'>
+         	Crear Comunidad 
+        </a>
+      </div>  
+	</div>
+  </ion-content>
+</ion-view>

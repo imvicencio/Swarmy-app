@@ -1,0 +1,33 @@
+<ion-view view-title="Notificaciones" class="titulo-vistas">
+  <ion-content>
+
+	<div class="list card" align="center">
+
+	<h2> Redactar notificación</h2>
+	</div>
+
+	<div class="list card">
+		<div class="list list-inset">
+  			<label class="item item-input">
+    			<i class="icon ion-ios-people placeholder-icon"></i>
+    			<input type="text" placeholder="Titulo de la notificación" ng-model='input.nombreNotificacion' required>  
+  			</label>
+		</div>
+	</div>
+	<div class="list card">
+		<div class="list list-inset">
+  			<label class="item item-input">
+    			<i class="icon ion-ios-people placeholder-icon"></i>
+    			<input type="text" placeholder="Descripcion de la comunidad" ng-model='input.descripcionNotificacion'>    
+  			</label>
+		</div>
+	</div>
+	<div class="list card">
+       	<div class="button-bar">
+			<a class="button button-l button-positive" href="#/app/notificacion" ng-click='sendData()'>
+         	Enviar notificación
+        </a>
+      </div>  
+	</div>
+  </ion-content>
+</ion-view>
