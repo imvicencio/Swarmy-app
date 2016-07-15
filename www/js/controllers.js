@@ -159,77 +159,78 @@ $sails.get("/notificaciones")
 
   //var paramValue = $route.current.$$route.paramExample;
   //alert($stateParams.id);
+/*
+  console.log($stateParams);
   $sails.get("/comunidad/"+$stateParams.id)
       .then(function(resp){
           $scope.datos = resp.data;
-          console.log(resp.data);
+        //  console.log(resp.data);
       }, function(resp){
         alert('Houston, we got a problem!');
       });
 
-
+*/
   <!--      -->
 
-  $scope.messages = [];
+    $scope.messages = [];
     $scope.connected = true
 
-    $sails.get('/chat/addMessage/', {comunidad: $stateParams.id});
+    $sails.get('/chat/addMessage/').then(
+      function (resp) {
+        $scope.messages = resp.data;
+        $sails.on('connect',function() {
 
-    $sails.on('connect',function() {
+          $sails.on('chat', function(obj){
+            console.log(obj);
+            //Check whether the verb is created or not
+            if(obj.verb === 'created') {
 
-      $sails.on('chat', function(obj){
-        console.log(obj);
-        //Check whether the verb is created or not
-        if(obj.verb === 'created') {
-          var username = null;
-          console.log('/user?id='+obj.data.user);
-          $sails.get('/user?id='+obj.data.user)
-          .success(function (data, status, headers, jwr) {
-            username = data.name;
-            addMessageToList(username, true, obj.data.message);
-          })
-          .error(function (data, status, headers, jwr) {
-            console.log(data, status, headers, jwr);
+                addMessageToList(username, true, obj.data.message);
+
+            }
           });
-        }
-      });
 
-      // On login display welcome message
-      $sails.on('login', function (data) {
-        //Set the value of connected flag
-        $scope.connected = true
-        $scope.peopleQtyMessage = message_string(data.numUsers);
-      });
+          // On login display welcome message
+          $sails.on('login', function (data) {
+            //Set the value of connected flag
+            $scope.connected = true
+            $scope.peopleQtyMessage = message_string(data.numUsers);
+          });
 
-      // Whenever the server emits 'user joined', log it in the chat body
-      $sails.on('user_joined', function (data) {
-        if (data.user && (data.user.name != $rootScope.user.name)) {
-          addMessageToList("", false, data.user.name + " joined");
-        }
-        $scope.peopleQtyMessage = message_string(data.numUsers);
-      });
+          // Whenever the server emits 'user joined', log it in the chat body
+          $sails.on('user_joined', function (data) {
+            if (data.user && (data.user.name != $rootScope.user.name)) {
+              addMessageToList("", false, data.user.name + " joined");
+            }
+            $scope.peopleQtyMessage = message_string(data.numUsers);
+          });
 
-      // Whenever the server emits 'user left', log it in the chat body
-      $sails.on('user_left', function (data) {
-        if (data.user && (data.user.name != $rootScope.user.name)) {
-          addMessageToList("", false, data.name +" left")
-        }
-        $scope.peopleQtyMessage = message_string(data.numUsers);
-      });
+          // Whenever the server emits 'user left', log it in the chat body
+          $sails.on('user_left', function (data) {
+            if (data.user && (data.user.name != $rootScope.user.name)) {
+              addMessageToList("", false, data.name +" left")
+            }
+            $scope.peopleQtyMessage = message_string(data.numUsers);
+          });
 
-      //Whenever the server emits 'typing', show the typing message
-      $sails.on('typing', function (data) {
-        addChatTyping(data);
-      });
+          //Whenever the server emits 'typing', show the typing message
+          $sails.on('typing', function (data) {
+            addChatTyping(data);
+          });
 
-      // Whenever the server emits 'stop typing', kill the typing message
-      $sails.on('stop_typing', function (data) {
-        removeChatTyping(data.name);
-      });
-    })
+          // Whenever the server emits 'stop typing', kill the typing message
+          $sails.on('stop_typing', function (data) {
+            removeChatTyping(data.name);
+          });
+        })
+      }
+    )
+    console.log("comunidad " + $stateParams.id);
+
     //function called when user hits the send button
     $scope.sendMessage = function() {
       if ($scope.message) {
+        console.log($scope.message);
         $sails.post('/chat/addMessage/',{message: $scope.message, time: new Date(), user: $rootScope.user.id});
         $sails._raw.emit('stop typing');
         $scope.message = "";
