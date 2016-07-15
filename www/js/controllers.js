@@ -1,4 +1,8 @@
-angular.module('starter.controllers', ['ionic', 'ngCordova'])
+angular.module('starter.controllers', ['ionic', 'ngCordova','ngSails'])
+
+.config(['$sailsProvider', function ($sailsProvider) {
+    $sailsProvider.url = 'https://swarmy-server.herokuapp.com';
+}])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
@@ -76,13 +80,25 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
 }])
 
-.controller('MapCtrl', function($scope, $state, $cordovaGeolocation) {
-  var options = {timeout: 10000, enableHighAccuracy: true};
+.controller('MapCtrl', function($scope, $state, $cordovaGeolocation, $sails, $timeout) {
+
+  $scope.puntos = [];
+
+  $sails.get("/mapa")
+      .then(function(resp){
+          $scope.puntos = resp.data;
+          console.log(resp.data);
+      }, function(resp){
+        alert('Houston, we got a problem!');
+      });
+
+
+  var options = {timeout: 1000, enableHighAccuracy: true};
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
     var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     var mapOptions = {
       center: latLng,
-      zoom: 16,
+      zoom: 10,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
@@ -99,6 +115,41 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
           infoWindow.open($scope.map, marker);
       });
 
+    //  $timeout(callAtTimeout, 5000);
+
+      function callAtTimeout() {
+    console.log("Timeout occurred");
+}
+
+  //  google.maps.event.trigger($scope.map, 'resize');
+
+      for (var i = 0; i < $scope.puntos.length; i++) {
+        //alert($scope.puntos.length);
+        //console.log($scope.puntos.length);
+        var record = $scope.puntos[i];
+        //alert(record.nombre);
+        var markerPos = new google.maps.LatLng(record.lat, record.lng);
+
+        // Add the markerto the map
+        var marker = new google.maps.Marker({
+            map: $scope.map,
+            animation: google.maps.Animation.DROP,
+            position: markerPos,
+            title: record.nombre
+        });
+
+
+/*        var infoWindowContent = new google.maps.InfoWindow({
+            content: "<h4>" + record.nombre + "</h4>"
+        });
+        google.maps.event.addListener(marker, 'click', function () {
+            infoWindowContent.open($scope.map, marker);
+        });
+*/
+
+      }
+
+/*
     var pos1 =  new google.maps.LatLng(-33.4501078, -70.691244);
     var marca1 = new google.maps.Marker({
         map: $scope.map,
@@ -164,7 +215,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
       google.maps.event.addListener(marca5, 'click', function () {
           infoWindow5.open($scope.map, marca5);
       });
-
+*/
 
     })
   }, function(error){
