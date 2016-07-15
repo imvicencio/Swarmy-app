@@ -1,0 +1,25 @@
+<ion-view view-title="Inicio" class="titulo-vistas">
+  <ion-content>
+	<div class="list card">
+	  <a class="item item-icon-left item-icon-right" href="#/app/comunidads">
+	    <i class="icon ion-ios-people"></i>
+	    Comunidades
+	    <i class="icon ion-chevron-right"></i>
+	  </a>
+	  <a class="item item-icon-left item-icon-right" href="#/app/servicios">
+	    <i class="icon ion-ios-briefcase"></i>
+	    Servicios
+	    <i class="icon ion-chevron-right"></i>
+	  </a>
+	</div>
+	<ion-nav-view></ion-nav-view>
+
+    <script id="templates/rating.html" type="text/ng-template">
+      <ion-view view-title="Home">
+        <ion-content class="padding">
+          <rating ng-model="data.rating" max="data.max" ></rating>
+        </ion-content>
+      </ion-view>
+    </script>
+  </ion-content>
+</ion-view>

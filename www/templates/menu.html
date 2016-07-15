@@ -1,0 +1,52 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-stable bar-customize">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" style="color: white;"></button>
+      </ion-nav-buttons>
+
+      <ion-nav-buttons side="right">
+        <a class="ion-android-notifications icon-menu title" href="#/app/comunidads"></a>
+        <a class="ion-location icon-menu title" href="#/app/tab-map"></a>
+        <a class="ion-search icon-menu title" href="#/app/search"></a>
+      </ion-nav-buttons>
+
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left">
+    <ion-content>
+      <ion-list>
+        <ion-item class="menu-persona">
+          <i class="ion-person"></i>
+          <br>
+          Javier Fuentes
+        </ion-item>
+        <ion-item menu-close href="#/app/inicio">
+          <span class="ion-home"></span>
+          Inicio
+        </ion-item>
+        <ion-item menu-close href="#/app/comunidades">
+          <span class="ion-chatbubble"></span>
+          Comunidad
+        </ion-item>
+        <ion-item menu-close href="#/app/browse">
+          <span class="ion-android-notifications"></span>
+          Notificaciones
+        </ion-item>
+        <ion-item menu-close href="#/app/search">
+          <span class="ion-search"></span>
+          Buscar
+        </ion-item>
+        <ion-item menu-close href="#/app/tab-map">
+          <span class="ion-university"></span>
+          Universidad
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
