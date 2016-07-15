@@ -250,7 +250,7 @@ $sails.get("/notificaciones")
         position:pos5
     });
     var infoWindow5 = new google.maps.InfoWindow({
-          content: "Pizzas XL"
+          content: '<h2>Pizzas Xl</h2><img src="img/pizzasxl.png" /> <br><a href="#/app/pizzaxl"> Mas info</a>'
       });
       google.maps.event.addListener(marca5, 'click', function () {
           infoWindow5.open($scope.map, marca5);
