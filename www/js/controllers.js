@@ -68,11 +68,13 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
   ];
 })
 
-.controller('ComunidadCtrl', function($scope, $stateParams) {
+.controller('ComunidadCtrl', function($scope, $stateParams,Authorization) {
+   $scope.input = Authorization;
 })
 
 
-.controller('RankingCtrl', function($scope) {
+.controller('RankingCtrl', function($scope,Authorization) {
+   $scope.input = Authorization;
   
   $scope.rating = 4;
   $scope.data = {
