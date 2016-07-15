@@ -103,7 +103,7 @@ $sails.get("/notificaciones")
   $scope.datos = [];
   $scope.messages = [];
   $scope.connected = true
-
+  $scope.input = Authorization;
 
   //var paramValue = $route.current.$$route.paramExample;
   //alert($stateParams.id);
@@ -116,28 +116,66 @@ $sails.get("/notificaciones")
       });
 
 
-      $sails.get('/chat/addMessage/', {user: $rootScope.user}); // mensajes de la comunidad
+  <!--      -->
 
-      $sails.on('connect',function() {
+  $scope.messages = [];
+    $scope.connected = true
 
-        $sails.on('chat', function(obj){
-          console.log(obj);
-          //Check whether the verb is created or not
-          if(obj.verb === 'created') {
-            var username = null;
-            console.log('/user?id='+obj.data.user);
-            $sails.get('/user?id='+obj.data.user)
-            .success(function (data, status, headers, jwr) {
-              username = data.name;
-              addMessageToList(username, true, obj.data.message);
-            })
-            .error(function (data, status, headers, jwr) {
-              console.log(data, status, headers, jwr);
-            });
-          }}
-        )});
+    $sails.get('/chat/addMessage/', {comunidad: $stateParams.id});
 
-      //function called when user hits the send button
+    $sails.on('connect',function() {
+
+      $sails.on('chat', function(obj){
+        console.log(obj);
+        //Check whether the verb is created or not
+        if(obj.verb === 'created') {
+          var username = null;
+          console.log('/user?id='+obj.data.user);
+          $sails.get('/user?id='+obj.data.user)
+          .success(function (data, status, headers, jwr) {
+            username = data.name;
+            addMessageToList(username, true, obj.data.message);
+          })
+          .error(function (data, status, headers, jwr) {
+            console.log(data, status, headers, jwr);
+          });
+        }
+      });
+
+      // On login display welcome message
+      $sails.on('login', function (data) {
+        //Set the value of connected flag
+        $scope.connected = true
+        $scope.peopleQtyMessage = message_string(data.numUsers);
+      });
+
+      // Whenever the server emits 'user joined', log it in the chat body
+      $sails.on('user_joined', function (data) {
+        if (data.user && (data.user.name != $rootScope.user.name)) {
+          addMessageToList("", false, data.user.name + " joined");
+        }
+        $scope.peopleQtyMessage = message_string(data.numUsers);
+      });
+
+      // Whenever the server emits 'user left', log it in the chat body
+      $sails.on('user_left', function (data) {
+        if (data.user && (data.user.name != $rootScope.user.name)) {
+          addMessageToList("", false, data.name +" left")
+        }
+        $scope.peopleQtyMessage = message_string(data.numUsers);
+      });
+
+      //Whenever the server emits 'typing', show the typing message
+      $sails.on('typing', function (data) {
+        addChatTyping(data);
+      });
+
+      // Whenever the server emits 'stop typing', kill the typing message
+      $sails.on('stop_typing', function (data) {
+        removeChatTyping(data.name);
+      });
+    })
+    //function called when user hits the send button
     $scope.sendMessage = function() {
       if ($scope.message) {
         $sails.post('/chat/addMessage/',{message: $scope.message, time: new Date(), user: $rootScope.user.id});
@@ -151,6 +189,13 @@ $sails.get("/notificaciones")
       $ionicScrollDelegate.resize();
       $ionicScrollDelegate.scrollBottom(true); // Scroll to bottom to read the latest
     }
+
+    // Return message string depending on the number of users
+    function message_string(number_of_users) {
+      return number_of_users === 1 ? "Hay un participante conectado":"Hay " + number_of_users + " participantes"
+    }
+
+  <!--      -->
 
 })
 
