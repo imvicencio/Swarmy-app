@@ -98,9 +98,12 @@ $sails.get("/notificaciones")
 })
 
 
-.controller('ComunidadCtrl', function($scope,$stateParams, $sails, $timeout) {
+.controller('ComunidadCtrl', function($scope,$stateParams, $sails, $timeout , Authorization) {
 
   $scope.datos = [];
+  $scope.messages = [];
+  $scope.connected = true
+
 
   //var paramValue = $route.current.$$route.paramExample;
   //alert($stateParams.id);
@@ -111,6 +114,43 @@ $sails.get("/notificaciones")
       }, function(resp){
         alert('Houston, we got a problem!');
       });
+
+
+      $sails.get('/chat/addMessage/', {user: $rootScope.user}); // mensajes de la comunidad
+
+      $sails.on('connect',function() {
+
+        $sails.on('chat', function(obj){
+          console.log(obj);
+          //Check whether the verb is created or not
+          if(obj.verb === 'created') {
+            var username = null;
+            console.log('/user?id='+obj.data.user);
+            $sails.get('/user?id='+obj.data.user)
+            .success(function (data, status, headers, jwr) {
+              username = data.name;
+              addMessageToList(username, true, obj.data.message);
+            })
+            .error(function (data, status, headers, jwr) {
+              console.log(data, status, headers, jwr);
+            });
+          }}
+        )});
+
+      //function called when user hits the send button
+    $scope.sendMessage = function() {
+      if ($scope.message) {
+        $sails.post('/chat/addMessage/',{message: $scope.message, time: new Date(), user: $rootScope.user.id});
+        $sails._raw.emit('stop typing');
+        $scope.message = "";
+      }
+    }
+
+    function addMessageToList(username, style_type, message){
+      $scope.messages.push({content: message, style:style_type, username:username})  // Push the messages to the messages list.
+      $ionicScrollDelegate.resize();
+      $ionicScrollDelegate.scrollBottom(true); // Scroll to bottom to read the latest
+    }
 
 })
 
@@ -157,139 +197,146 @@ $scope.$watch('data.rating', function() {
       .then(function(resp){
           $scope.puntos = resp.data;
           console.log(resp.data);
+
+
+          var options = {timeout: 1000, enableHighAccuracy: true};
+          $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+            var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var mapOptions = {
+              center: latLng,
+              zoom: 10,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+            google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+              var marker = new google.maps.Marker({
+                  map: $scope.map,
+                  animation: google.maps.Animation.BOUNCE,
+                  position: latLng
+              });
+              var infoWindow = new google.maps.InfoWindow({
+                  content: "Aqui estoy"
+              });
+              google.maps.event.addListener(marker, 'click', function () {
+                  infoWindow.open($scope.map, marker);
+              });
+
+            //  $timeout(callAtTimeout, 5000);
+
+        //      function callAtTimeout() {
+        //    console.log("Timeout occurred");
+        //  }
+
+          //  google.maps.event.trigger($scope.map, 'resize');
+
+              for (var i = 0; i < $scope.puntos.length; i++) {
+                //alert($scope.puntos.length);
+                //console.log($scope.puntos.length);
+                var record = $scope.puntos[i];
+                //alert(record.nombre);
+                var markerPos = new google.maps.LatLng(record.lat, record.lng);
+
+                // Add the markerto the map
+                var marker2 = new google.maps.Marker({
+                    map: $scope.map,
+                    animation: google.maps.Animation.DROP,
+                    position: markerPos,
+                    title: record.nombre
+                });
+
+
+               var infoWindowContent = new google.maps.InfoWindow({
+                    content: "<h4>" + record.nombre + "</h4>"
+                });
+                google.maps.event.addListener(marker2, 'click', function () {
+                    infoWindowContent.open($scope.map, marker2);
+                });
+
+
+              }
+
+        /*
+            var pos1 =  new google.maps.LatLng(-33.4501078, -70.691244);
+            var marca1 = new google.maps.Marker({
+                map: $scope.map,
+                animation: google.maps.Animation.DROP,
+                position:pos1,
+            });
+            var infoWindow1 = new google.maps.InfoWindow({
+                  content: '<h2>Estadio Usach</h2><img src="img/Estadio.png" /> <br><a href="#/app/estadio"> Mas info</a>'
+                  //content: "Estadio Usach"
+              });
+              google.maps.event.addListener(marca1, 'click', function () {
+                  infoWindow1.open($scope.map, marca1);
+              });
+
+            var pos2 =  new google.maps.LatLng(-33.4498482, -70.6876016);
+            var marca2 = new google.maps.Marker({
+                map: $scope.map,
+                animation: google.maps.Animation.DROP,
+                position:pos2
+            });
+            var infoWindow2 = new google.maps.InfoWindow({
+                  content: "Kioscos de Informática"
+              });
+              google.maps.event.addListener(marca2, 'click', function () {
+                  infoWindow2.open($scope.map, marca2);
+              });
+
+            var pos3 =  new google.maps.LatLng(-33.4500630, -70.6862283);
+            var marca3 = new google.maps.Marker({
+                map: $scope.map,
+                animation: google.maps.Animation.DROP,
+                position:pos3
+            });
+            var infoWindow3 = new google.maps.InfoWindow({
+                  content: "Casino Central"
+              });
+              google.maps.event.addListener(marca3, 'click', function () {
+                  infoWindow3.open($scope.map, marca3);
+              });
+
+            var pos4 =  new google.maps.LatLng(-33.4497676, -70.6842542);
+            var marca4 = new google.maps.Marker({
+                map: $scope.map,
+                animation: google.maps.Animation.DROP,
+                position:pos4
+            });
+            var infoWindow4 = new google.maps.InfoWindow({
+                  content: "Centro Médico"
+              });
+              google.maps.event.addListener(marca4, 'click', function () {
+                  infoWindow4.open($scope.map, marca4);
+              });
+
+            var pos5 =  new google.maps.LatLng(-33.4510477, -70.6832778);
+            var marca5 = new google.maps.Marker({
+                map: $scope.map,
+                animation: google.maps.Animation.DROP,
+                position:pos5
+            });
+            var infoWindow5 = new google.maps.InfoWindow({
+                  content: '<h2>Pizzas Xl</h2><img src="img/pizzasxl.png" /> <br><a href="#/app/pizzaxl"> Mas info</a>'
+              });
+              google.maps.event.addListener(marca5, 'click', function () {
+                  infoWindow5.open($scope.map, marca5);
+              });
+        */
+
+            })
+          }, function(error){
+            console.log("Could not get location");
+          });
+
+
+
+
       }, function(resp){
         alert('Houston, we got a problem!');
       });
 
 
-  var options = {timeout: 1000, enableHighAccuracy: true};
-  $cordovaGeolocation.getCurrentPosition(options).then(function(position){
-    var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    var mapOptions = {
-      center: latLng,
-      zoom: 10,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    google.maps.event.addListenerOnce($scope.map, 'idle', function(){
-      var marker = new google.maps.Marker({
-          map: $scope.map,
-          animation: google.maps.Animation.BOUNCE,
-          position: latLng
-      });
-      var infoWindow = new google.maps.InfoWindow({
-          content: "Aqui estoy"
-      });
-      google.maps.event.addListener(marker, 'click', function () {
-          infoWindow.open($scope.map, marker);
-      });
 
-    //  $timeout(callAtTimeout, 5000);
-
-      function callAtTimeout() {
-    console.log("Timeout occurred");
-}
-
-  //  google.maps.event.trigger($scope.map, 'resize');
-
-      for (var i = 0; i < $scope.puntos.length; i++) {
-        //alert($scope.puntos.length);
-        //console.log($scope.puntos.length);
-        var record = $scope.puntos[i];
-        //alert(record.nombre);
-        var markerPos = new google.maps.LatLng(record.lat, record.lng);
-
-        // Add the markerto the map
-        var marker = new google.maps.Marker({
-            map: $scope.map,
-            animation: google.maps.Animation.DROP,
-            position: markerPos,
-            title: record.nombre
-        });
-
-
-/*        var infoWindowContent = new google.maps.InfoWindow({
-            content: "<h4>" + record.nombre + "</h4>"
-        });
-        google.maps.event.addListener(marker, 'click', function () {
-            infoWindowContent.open($scope.map, marker);
-        });
-*/
-
-      }
-
-/*
-    var pos1 =  new google.maps.LatLng(-33.4501078, -70.691244);
-    var marca1 = new google.maps.Marker({
-        map: $scope.map,
-        animation: google.maps.Animation.DROP,
-        position:pos1,
-    });
-    var infoWindow1 = new google.maps.InfoWindow({
-          content: '<h2>Estadio Usach</h2><img src="img/Estadio.png" /> <br><a href="#/app/estadio"> Mas info</a>'
-          //content: "Estadio Usach"
-      });
-      google.maps.event.addListener(marca1, 'click', function () {
-          infoWindow1.open($scope.map, marca1);
-      });
-
-    var pos2 =  new google.maps.LatLng(-33.4498482, -70.6876016);
-    var marca2 = new google.maps.Marker({
-        map: $scope.map,
-        animation: google.maps.Animation.DROP,
-        position:pos2
-    });
-    var infoWindow2 = new google.maps.InfoWindow({
-          content: "Kioscos de Informática"
-      });
-      google.maps.event.addListener(marca2, 'click', function () {
-          infoWindow2.open($scope.map, marca2);
-      });
-
-    var pos3 =  new google.maps.LatLng(-33.4500630, -70.6862283);
-    var marca3 = new google.maps.Marker({
-        map: $scope.map,
-        animation: google.maps.Animation.DROP,
-        position:pos3
-    });
-    var infoWindow3 = new google.maps.InfoWindow({
-          content: "Casino Central"
-      });
-      google.maps.event.addListener(marca3, 'click', function () {
-          infoWindow3.open($scope.map, marca3);
-      });
-
-    var pos4 =  new google.maps.LatLng(-33.4497676, -70.6842542);
-    var marca4 = new google.maps.Marker({
-        map: $scope.map,
-        animation: google.maps.Animation.DROP,
-        position:pos4
-    });
-    var infoWindow4 = new google.maps.InfoWindow({
-          content: "Centro Médico"
-      });
-      google.maps.event.addListener(marca4, 'click', function () {
-          infoWindow4.open($scope.map, marca4);
-      });
-
-    var pos5 =  new google.maps.LatLng(-33.4510477, -70.6832778);
-    var marca5 = new google.maps.Marker({
-        map: $scope.map,
-        animation: google.maps.Animation.DROP,
-        position:pos5
-    });
-    var infoWindow5 = new google.maps.InfoWindow({
-          content: '<h2>Pizzas Xl</h2><img src="img/pizzasxl.png" /> <br><a href="#/app/pizzaxl"> Mas info</a>'
-      });
-      google.maps.event.addListener(marca5, 'click', function () {
-          infoWindow5.open($scope.map, marca5);
-      });
-*/
-
-    })
-  }, function(error){
-    console.log("Could not get location");
-  });
 });
 
 

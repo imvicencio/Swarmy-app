@@ -11,5 +11,55 @@
 
   	</ion-item>
 
+
+
+    <div ng-repeat="message in messages" class="message-wrapper disable-user-behavior">
+      <div ng-if="message.style == false" class="log">{{message.content}}</div>
+      <div ng-if="user.name !== message.username && message.style != false">
+        <img ng-src="img/avatar.jpg"
+             class="profile-pic left" >
+        <div class="chat-bubble left">
+          <div class="message ng-binding">{{message.content}}</div>
+          <div class="message-detail">
+            <span ng-click="viewProfile(chat)" class="bold ng-binding">{{message.username}}</span>
+            <span>{{message.createdAt}}</span>
+          </div>
+        </div>
+      </div>
+      <div ng-if="user.name === message.username && message.style != false">
+        <img ng-src="img/avatar.jpg"
+             class="profile-pic right" >
+        <div class="chat-bubble right">
+          <div class="message ng-binding">{{message.content}}</div>
+          <div class="message-detail">
+            <span ng-click="viewProfile(chat)" class="bold ng-binding">{{message.username}}</span>
+            <span>{{message.createdAt}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="cf"></div>
+    </div>
+
+
+
+
+      <div class="list light-grey form-message">
+          <div class="item item-input-inset light-grey">
+            <label  class="item-input-wrapper line-light-grey nopadtop">
+              <input class="line-light-grey" ng-change="updateTyping()" type="text"  placeholder="Message" ng-enter="sendMessage()" ng-model="message">
+            </label>
+            <div >
+              <button class="button button-energized" ng-click="sendMessage()"></button>
+            </div>
+          </div>
+      </div>
+
+
+
+
+
+
+
+
   </ion-content>
 </ion-view>
