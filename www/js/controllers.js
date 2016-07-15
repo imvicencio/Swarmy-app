@@ -68,7 +68,19 @@ $sails.get("/comunidad")
 
 })
 
+.controller('notificacionCtrl', function($scope, $sails) {
 
+  $scope.notificacionData = [];
+
+$sails.get("/notificaciones")
+    .then(function(resp){
+        $scope.notificacionData = resp.data;
+        console.log(resp.data);
+    }, function(resp){
+      //alert('Houston, we got a problem!');
+    });
+
+})
 
 
 .controller('ComunidadCtrl', function($scope,$stateParams, $sails, $timeout) {

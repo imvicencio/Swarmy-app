@@ -36,6 +36,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngSails'])
     controller: 'AppCtrl'
   })
 
+  .state('app.notificacion', {
+    url: '/notificacion',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/notificacion.html',
+          controller: 'notificacionCtrl'
+      }
+
+
+  }})
+
   .state('splash', {
     url: '/splash',
     templateUrl: 'templates/splash.html'//,
