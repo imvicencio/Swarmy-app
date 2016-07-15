@@ -90,6 +90,10 @@ ul.rating li i {
     padding: 36px 16px !important;
 }
 
+.button-bar > .button-l{
+    padding: 5px 16px !important;
+}
+
 .button.button-block, .button.button-full {
     padding: 13px !important;
 }

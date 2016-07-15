@@ -52,6 +52,24 @@ angular.module('starter.controllers', ['ionic', 'ngCordova','ngSails', 'ionic.ra
   return authorization;
 })
 
+.factory('CreateComunidad', function() {
+
+
+
+  crearComunidad = {};
+  crearComunidad.nombreComunidad = "";
+  crearComunidad.descripcionComunidad = "";
+  return crearComunidad;
+})
+
+.factory('CreateNotificacion', function() {
+
+  crearNotificacion = {};
+  crearNotificacion.nombreNotificacion = "";
+  crearNotificacion.descripcionNotificacion= "";
+  return crearNotificacion;
+})
+
 .controller('RegistroCtrl', function($scope, Authorization){
   $scope.input = Authorization;
 })
@@ -60,7 +78,40 @@ angular.module('starter.controllers', ['ionic', 'ngCordova','ngSails', 'ionic.ra
   $scope.input = Authorization;
 })
 
-.controller('ComunidadsCtrl', function($scope, $sails) {
+.controller('CrearComunidadCtrl',function($scope, $http, CreateComunidad){
+  $scope.input = CreateComunidad;
+
+
+  $scope.sendData = function(){
+
+  $http.post('http://swarmy-server.herokuapp.com/comunidad', 
+    {nombre: $scope.input.nombreComunidad, detalle: $scope.input.descripcionComunidad})
+    .success(function(data, status, headers, config) {
+      console.log('hola');
+    })
+    .error(function(data, status, headers, config) {
+      console.log('error', status, data);
+    });
+}
+})
+
+.controller('CrearNotificacionCtrl',function($scope, $http,CreateNotificacion){
+  $scope.input = CreateNotificacion;
+
+   $scope.sendData = function(){
+
+  $http.post('http://swarmy-server.herokuapp.com/notificaciones', 
+    {titulo: $scope.input.nombreNotificacion, contenido: $scope.input.descripcionNotificacion})
+    .success(function(data, status, headers, config) {
+      console.log('hola');
+    })
+    .error(function(data, status, headers, config) {
+      console.log('error', status, data);
+    });
+}
+})
+
+.controller('ComunidadsCtrl', function($scope, $sails, CreateComunidad) {
 /*  $scope.comunidads = [
     {  title: 'Deportes Usach', id: 1 },
     { title: 'Estudio Cabros', id: 2 },
@@ -70,21 +121,22 @@ angular.module('starter.controllers', ['ionic', 'ngCordova','ngSails', 'ionic.ra
     { title: 'Imprenta', id: 6 }
   ];*/
 
-
+  $scope.input = CreateComunidad;
   $scope.comunidads = [];
 
-$sails.get("/comunidad")
+  $sails.get("/comunidad")
     .then(function(resp){
-        $scope.comunidads = resp.data;
-        console.log(resp.data);
+      $scope.comunidads = resp.data;
+      console.log(resp.data);
     }, function(resp){
-      alert('Houston, we got a problem!');
-    });
+    alert('Houston, we got a problem!');
+  });
 
 })
 
-.controller('notificacionCtrl', function($scope, $sails) {
+.controller('notificacionCtrl', function($scope, $sails, CreateNotificacion) {
 
+  $scope.input = CreateNotificacion;
   $scope.notificacionData = [];
 
 $sails.get("/notificaciones")
@@ -476,3 +528,5 @@ $scope.$watch('data.rating', function() {
   });
 
 }).call(this);
+
+

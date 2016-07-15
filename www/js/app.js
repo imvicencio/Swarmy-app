@@ -68,6 +68,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngSails'])
     }
   })
 
+  .state('app.crearComunidad', {
+    url: '/crearComunidad',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/crearComunidad.html',
+        controller: 'CrearComunidadCtrl'
+      }
+    }
+  })
+
+  .state('app.crearNotificacion', {
+    url: '/crearNotificacion',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/crearNotificacion.html',
+        controller: 'CrearNotificacionCtrl'
+      }
+    }
+  })
+
 .state('app.estadio', {
     url: '/estadio',
     views: {
