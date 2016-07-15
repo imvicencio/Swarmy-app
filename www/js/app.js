@@ -120,7 +120,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngSails'])
     })
 
   .state('app.single', {
-    url: '/comunidads/:comunidadId',
+    url: '/comunidads/:id',
     views: {
       'menuContent': {
         templateUrl: 'templates/comunidad.html',

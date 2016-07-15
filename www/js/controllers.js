@@ -45,18 +45,46 @@ angular.module('starter.controllers', ['ionic', 'ngCordova','ngSails'])
   };
 })
 
-.controller('ComunidadsCtrl', function($scope) {
-  $scope.comunidads = [
+.controller('ComunidadsCtrl', function($scope, $sails) {
+/*  $scope.comunidads = [
     {  title: 'Deportes Usach', id: 1 },
     { title: 'Estudio Cabros', id: 2 },
     { title: 'Quimica II', id: 3 },
     { title: 'Loleros', id: 4 },
     { title: 'Rap', id: 5 },
     { title: 'Imprenta', id: 6 }
-  ];
+  ];*/
+
+
+  $scope.comunidads = [];
+
+$sails.get("/comunidad")
+    .then(function(resp){
+        $scope.comunidads = resp.data;
+        console.log(resp.data);
+    }, function(resp){
+      alert('Houston, we got a problem!');
+    });
+
 })
 
-.controller('ComunidadCtrl', function($scope, $stateParams) {
+
+
+
+.controller('ComunidadCtrl', function($scope,$stateParams, $sails, $timeout) {
+
+  $scope.datos = [];
+
+  //var paramValue = $route.current.$$route.paramExample;
+  //alert($stateParams.id);
+  $sails.get("/comunidad/"+$stateParams.id)
+      .then(function(resp){
+          $scope.datos = resp.data;
+          console.log(resp.data);
+      }, function(resp){
+        alert('Houston, we got a problem!');
+      });
+
 })
 
 

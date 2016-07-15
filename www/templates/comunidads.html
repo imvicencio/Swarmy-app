@@ -3,12 +3,12 @@
   <div class="list card">
     <a class="item item-icon-left ">
       <i class="icon ion-ios-people"></i>
-      Mis comunidades 
+      Mis comunidades
     </a>
   </div>
     <div class="list card">
       <ion-item ng-repeat="comunidad in comunidads" href="#/app/comunidads/{{comunidad.id}}">
-        {{comunidad.imagen} {{comunidad.title}}
+        {{comunidad.nombre}}
       </ion-item>
     </div>
     <button class="button button-block button-positive">
@@ -18,5 +18,5 @@
       Crear Comunidad
     </button>
   </ion-content>
-  
+
 </ion-view>
